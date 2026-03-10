@@ -57,6 +57,27 @@ async function run() {
       res.send(result);
     })
 
+    app.put("/updateJob/:id",async(req,res)=>{
+      const  jobData = req.body;
+        const {id} = req.params;
+        const query = {_id : new ObjectId(id)};
+        const options={upsert:true}
+        const updateJob ={
+          $set:{
+            ...jobData
+          }
+        }
+        const result = await jobsCollection.updateOne(query,updateJob,options);
+        res.send(result);
+    })
+
+    app.delete("/jobs/:id",async(req,res)=>{
+        const {id} = req.params;
+        const query = { _id : new ObjectId(id)};
+        const result = await jobsCollection.deleteOne(query);
+        res.send(result);
+    })
+
     app.get('/bids',async(req,res)=>{
       const result = await bidsCollection.find().toArray();
       res.send(result);
