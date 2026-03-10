@@ -43,6 +43,30 @@ async function run() {
        res.send(result);
     })
 
+    app.get("/jobs/:email",async(req,res)=>{
+      const email = req.query.email;
+      const filter = {'buyer.email' : email};
+      const result = await jobsCollection.find(filter).toArray();
+      console.log(result);
+      res.send(result);
+    })
+
+    app.post('/jobs',async(req,res)=>{
+      const jobData = req.body;
+      const result = await jobsCollection.insertOne(jobData);
+      res.send(result);
+    })
+
+    app.get('/bids',async(req,res)=>{
+      const result = await bidsCollection.find().toArray();
+      res.send(result);
+    })
+    app.post('/bids',async(req,res)=>{
+      const bidData = req.body;
+      const result = await bidsCollection.insertOne(bidData);
+      // console.log(result);
+      res.send(result);
+    })
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
