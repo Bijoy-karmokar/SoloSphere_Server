@@ -78,14 +78,24 @@ async function run() {
         res.send(result);
     })
 
-    app.get('/bids',async(req,res)=>{
-      const result = await bidsCollection.find().toArray();
-      res.send(result);
-    })
     app.post('/bids',async(req,res)=>{
       const bidData = req.body;
       const result = await bidsCollection.insertOne(bidData);
       // console.log(result);
+      res.send(result);
+    })
+    
+    app.get('/my-bids/:email',async(req,res)=>{
+      const email = req.query.email;
+      const query = {email};
+      const result = await bidsCollection.find(query).toArray();
+      res.send(result);
+    })
+
+    app.get('/bid-request/:email',async(req,res)=>{
+      const email = req.query.email;
+      const filter = { 'buyer.email' : email};
+      const result = await bidsCollection.find(filter).toArray();
       res.send(result);
     })
     await client.db("admin").command({ ping: 1 });
